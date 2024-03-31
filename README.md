@@ -6,7 +6,7 @@ Nabu port of the Arduboy game [VirusLQP-79](https://github.com/TEAMarg/ID-40-VIR
 
 *The MSX port placed 2nd in the [MSXDev18 contest](https://www.msxdev.org/2018/05/10/msxdev18-3rd-entry-virus-lqp-79/)*
 
-Latest release [download](https://github.com/Pentacour/viruslqp79_msx/releases/tag/v1.1)
+Latest release [download](/eej/viruslqp79_nabu/releases)
 
 
 ## Story
