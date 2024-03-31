@@ -29,20 +29,29 @@ Pause the game with the pause key.
 
 ## How to assemble
 
-First I used XL2S [Sjasm assembler](http://www.xl2s.tk/) and then I moved to Pipagerardo [sjasmpg](https://github.com/pipagerardo/sjasmpg). I think the two assemblers can be used.
+Building the project for Nabu is unfortunately somewhat convoluted.  To provide MSX bios functionality I've been working on [NC-BIOS](src/NC-BIOS/) a modified version of C-BIOS. The bios and a relocater both need to be built along with the game.
 
-Download the executable sjasm or sjasmpg. Download Virus LQP-79 code and into src directory execute:
+To build the NC-BIOS, I recommend [sjasmplus](https://github.com/z00m128/sjasmplus).
 
-**Windows**
-sjasmpg_win_eng.exe main.asm
+The MSX build was developed using Pipagerardo [sjasmpg](https://github.com/pipagerardo/sjasmpg), and it is recommended for the Nabu build.
 
-**macOS**
-./sjasmpg_mac_eng main.asm
+### Build steps
 
-**Linux**
-./sjasmpg_linux_eng main.asm
+1. From the src directory, build NC-BIOS with sjasmplus:
 
-An lqp79.rom file will be created.
+  `sjasmplus ./NC-BIOS/src/main_msx1.asm --raw=nc-bios.bin --exp=nc-bios.exp --lst=nc-bios.lst`
+
+3. Build the game with sjasmpg:
+
+  `sjasmpg_win_eng ./main.asm`
+
+3. Build the relocator to obtain the Homebrew `.nabu` file:
+
+  `sjasmplus ./nc-loader.asm --raw=virus.nabu --lst=nabu-loader.lst`
+
+5. Build the relocator with the -DCPM flag to obtain the CP/M `.com` file:
+
+  `sjasmplus.exe -DCPM ./nc-loader.asm --raw=virus.com --lst=com-loader.lst`
 
 ## Credits
 **Arduboy Version:** Team Arg (Fuopy, JO3RY, Justin Cyr and Castpixel).
@@ -62,6 +71,10 @@ An lqp79.rom file will be created.
 **Soundtrack:** Bitcaffe.
 
 **Coded in assembler for MSX:** Pentacour.
+
+**MSX BIOS calls used for the Nabu:** [C-BIOS](https://cbios.sourceforge.net/).
+
+**Converted for the Nabu:** EEJ.
 
 ## Pentacour's Tools
 [Sjasm assembler](http://www.xl2s.tk/)(Sjoerd Mastjin) and [sjasmpg](https://github.com/pipagerardo/sjasmpg) (PipaGerardo).
