@@ -1,11 +1,19 @@
 Copyright (c) 2002-2005 BouKiCHi.  All rights reserved.
+
 Copyright (c) 2003 Reikan.  All rights reserved.
+
 Copyright (c) 2004-2006,2008-2010 Maarten ter Huurne.  All rights reserved.
+
 Copyright (c) 2004-2006,2008-2011 Albert Beevendorp.  All rights reserved.
+
 Copyright (c) 2004-2005 Patrick van Arkel.  All rights reserved.
+
 Copyright (c) 2004,2010-2011 Manuel Bilderbeek.  All rights reserved.
+
 Copyright (c) 2004-2006 Joost Yervante Damad.  All rights reserved.
+
 Copyright (c) 2004-2006 Jussi Pitkänen.  All rights reserved.
+
 Copyright (c) 2004-2007 Eric Boon.  All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
