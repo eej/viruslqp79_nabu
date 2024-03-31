@@ -851,9 +851,9 @@ TRATE_CREATE_ZOMBIES
     LD    A, [IX+K_OFFSET_STATE]
     INC   [IX+K_OFFSET_STATE]
     LD    A, [IX+K_OFFSET_STATE]
-    CP    50
+    CP    60 ;50 framerate is slightly higher on Nabu, so slow down zombie spawn
     JP    Z, .CREATEZOMBIE
-    CP    100
+    CP    110 ;100
     JP    C, .RENDEROPENDOOR
     LD    [IX+ENTITY.K_OFFSET_STATE], 1 
 .RENDERCLOSEDDOOR

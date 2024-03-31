@@ -14,6 +14,7 @@ SHOW_INTRO
                 LD              A, K_SONG_INTRO
                 CALL            CARGA_CANCION
                 POP             AF
+                EI
 
                 LD              HL, 0XF000
                 LD              [MWORK.TMP_COUNTER], HL
@@ -42,61 +43,61 @@ LOAD_INTRO
                 CALL            MSCREEN.CLEAR_SCREEN
                 CALL            DISSCR
 
-                CALL            SETGAMEPAGE0
+                ;CALL            SETGAMEPAGE0
                 LD              HL, MDATAP0.INTRO_PATTERNS_0
                 LD              DE, MWORK.TMP_UNZIP
                 CALL            PLETTER.UNPACK
-                CALL            RESTOREBIOS
+                ;CALL            RESTOREBIOS
                 LD              HL, MWORK.TMP_UNZIP
                 LD              DE, CHRTBL
                 LD              BC, 32*8*8
                 CALL            LDIRVM
 
-                CALL            SETGAMEPAGE0
+                ;CALL            SETGAMEPAGE0
                 LD              HL, MDATAP0.INTRO_COLORS_0
                 LD              DE, MWORK.TMP_UNZIP
                 CALL            PLETTER.UNPACK
-                CALL            RESTOREBIOS
+                ;CALL            RESTOREBIOS
                 LD              HL, MWORK.TMP_UNZIP
                 LD              DE, CLRTBL
                 LD              BC, 32*8*8
                 CALL            LDIRVM
 
-                CALL            SETGAMEPAGE0
+                ;CALL            SETGAMEPAGE0
                 LD              HL, MDATAP0.INTRO_PATTERNS_1
                 LD              DE, MWORK.TMP_UNZIP
                 CALL            PLETTER.UNPACK
-                CALL            RESTOREBIOS
+                ;CALL            RESTOREBIOS
                 LD              HL, MWORK.TMP_UNZIP
                 LD              DE, CHRTBL+32*8*8
                 LD              BC, 32*8*8
                 CALL            LDIRVM
 
-                CALL            SETGAMEPAGE0
+                ;CALL            SETGAMEPAGE0
                 LD              HL, MDATAP0.INTRO_COLORS_1
                 LD              DE, MWORK.TMP_UNZIP
                 CALL            PLETTER.UNPACK
-                CALL            RESTOREBIOS
+                ;CALL            RESTOREBIOS
                 LD              HL, MWORK.TMP_UNZIP
                 LD              DE, CLRTBL+32*8*8
                 LD              BC, 32*8*8
                 CALL            LDIRVM
 
-                CALL            SETGAMEPAGE0
+                ;CALL            SETGAMEPAGE0
                 LD              HL, MDATAP0.INTRO_PATTERNS_2
                 LD              DE, MWORK.TMP_UNZIP
                 CALL            PLETTER.UNPACK
-                CALL            RESTOREBIOS
+                ;CALL            RESTOREBIOS
                 LD              HL, MWORK.TMP_UNZIP
                 LD              DE, CHRTBL+32*8*8*2
                 LD              BC, 32*8*8
                 CALL            LDIRVM
 
-                CALL            SETGAMEPAGE0
+                ;CALL            SETGAMEPAGE0
                 LD              HL, MDATAP0.INTRO_COLORS_2
                 LD              DE, MWORK.TMP_UNZIP
                 CALL            PLETTER.UNPACK
-                CALL            RESTOREBIOS
+                ;CALL            RESTOREBIOS
                 LD              HL, MWORK.TMP_UNZIP
                 LD              DE, CLRTBL+32*8*8*2
                 LD              BC, 32*8*8
@@ -173,7 +174,7 @@ SHOW_SELECT_GAME
                 LD              HL, MWORK.CAMERA_SCREEN
                 LD              DE, NAMTBL
                 LD              B, 48
-                HALT
+                call vwait ;HALT
                 CALL            MSUPPORT.UFLDIRVM
 
                 XOR             A
@@ -224,7 +225,7 @@ SHOW_SELECT_GAME
                 CALL            MSCREEN.RENDER_TEXT
 
 .CONTINUE_SELECT_GAME
-                HALT
+                call vwait ;HALT
                 LD              HL, MWORK.CAMERA_SCREEN
                 LD              DE, NAMTBL
                 LD              B, 48
@@ -254,7 +255,7 @@ COOL_CLEAR_SCREEN
                 LD              HL, NAMTBL
                 LD              B, 31
 .LOOP_ROW
-                HALT
+                call vwait ;HALT
                 PUSH            BC
                 PUSH            HL
                 LD              B, 23
@@ -324,6 +325,10 @@ INIT_GAME
     LD    [MWORK.CURRENT_SPRITES_TABLE_POSITION], HL
 
     CALL  RESET_SPRITES
+
+    ld hl, SPRATR+53 ; speculative fix for rare sprite glitch
+    ld a, 208
+    call WRTVRM 
 
     JP MAIN_INIT_LEVEL
 
@@ -580,11 +585,11 @@ CHECK_BLUE_HOUSES
                                 CP      8
                                 RET     NZ
 
-                                CALL    SETGAMEPAGE0
+                                ;CALL    SETGAMEPAGE0
                                 LD      HL, MDATAP0.BLUE_HOUSES_PATTERNS
                                 LD      DE, MWORK.TMP_UNZIP
                                 CALL    PLETTER.UNPACK
-                                CALL    RESTOREBIOS
+                                ;CALL    RESTOREBIOS
                                 LD      HL, MWORK.TMP_UNZIP
                                 LD      DE, CHRTBL+146*8
                                 LD      BC, 64
@@ -598,11 +603,11 @@ CHECK_BLUE_HOUSES
                                 LD      BC, 64
                                 CALL    LDIRVM
 
-                                CALL    SETGAMEPAGE0
+                                ;CALL    SETGAMEPAGE0
                                 LD      HL, MDATAP0.BLUE_HOUSES_COLOR
                                 LD      DE, MWORK.TMP_UNZIP
                                 CALL    PLETTER.UNPACK
-                                CALL    RESTOREBIOS
+                                ;CALL    RESTOREBIOS
                                 LD      HL, MWORK.TMP_UNZIP
                                 LD      DE, CLRTBL+146*8
                                 LD      BC, 64
@@ -970,7 +975,7 @@ SHOW_LEVEL_ANIMATION
                         CALL    RENDER_LEVEL_NUMBER
 
                         ; TO VRAM
-                        HALT
+                        call vwait ;HALT
                         LD      HL, MWORK.CAMERA_SCREEN
                         LD      DE, NAMTBL
                         LD      B, 48
@@ -988,7 +993,7 @@ SHOW_LEVEL_ANIMATION
                         JP      .SHOWPRESSKEY
 
                         LD      A, 120; 0XEF
-.WAITLOOP               HALT
+.WAITLOOP               call vwait ;HALT
                         DEC     A
                         CP      0
                         JP      NZ, .WAITLOOP
@@ -1003,7 +1008,7 @@ SHOW_LEVEL_ANIMATION
                         LD      HL, PRESS_KEY_TILES_OFF
                         LD      BC, 13
                         LDIR
-                        HALT
+                        call vwait ;HALT
                         LD      HL, MWORK.CAMERA_SCREEN
                         LD      DE, NAMTBL
                         LD      B, 48
@@ -1199,7 +1204,7 @@ SHOW_PRESS_KEY
     LD  BC, 12
     LDIR
     ; TO VRAM
-    HALT
+    call vwait ;HALT
     LD  HL, MWORK.CAMERA_SCREEN
     LD  DE, NAMTBL
     LD  B, 48
@@ -1241,7 +1246,7 @@ SHOW_KEY_PRESSED
     LD  BC, 12
     LDIR
     ; TO VRAM
-    HALT
+    call vwait ;HALT
     LD  HL, MWORK.CAMERA_SCREEN
     LD  DE, NAMTBL
     LD  B, 48
@@ -1270,6 +1275,9 @@ SHOW_PRESS_SPACE_TO_CONTINUE
                                 LD      [MWORK.TMP_COUNTER], A
                                 XOR     A
                                 LD      [MWORK.TMP_COUNTER+1], A
+                                
+                                XOR     A
+                                CALL    GTTRIG ; Clear spacebar state                                
 
 .PRESSKEYLOOP                   LD      DE, MWORK.CAMERA_SCREEN+32*14+4
                                 LD      A, [MWORK.ANIMATION_TICK]
@@ -1299,7 +1307,7 @@ SHOW_PRESS_SPACE_TO_CONTINUE
 .PRESSKEYOFFCONTINUE            LD      HL, PRESS_SPACE_TILES_OFF
 .PRESSKEYRENDER                 LD      BC, 23
                                 LDIR
-                                HALT
+                                call vwait ;HALT
                                 LD      HL, MWORK.CAMERA_SCREEN
                                 LD      DE, NAMTBL
                                 LD      B, 48
@@ -1346,6 +1354,8 @@ SHOW_BONUS_ANIMATION
     LD    A, [MWORK.ANIMATION_TICK]
     INC   A
     LD    [MWORK.ANIMATION_TICK], A
+    ;AND   $f ;AND   7
+    ;CP    8 ;CP    7
     AND   7
     CP    7
     JR    NZ, .LOOPCONTINUE
@@ -1371,7 +1381,7 @@ SHOW_BONUS_ANIMATION
     LD  HL, MWORK.CAMERA_SCREEN+10*32+19
     CALL    RENDER_BONUS_POINTS
 
-    HALT
+    call vwait ;HALT
     LD  HL, MWORK.CAMERA_SCREEN
     LD  DE, NAMTBL
     LD  B, 48
@@ -1383,7 +1393,7 @@ SHOW_BONUS_ANIMATION
 
     LD  B, 8*6
 .LOOPWAIT
-    HALT
+    call vwait ;HALT
     DJNZ .LOOPWAIT
 
 
@@ -1494,7 +1504,7 @@ SHOW_HALF_QUEST
     POP     BC
     DJNZ    .LOOP
 
-    HALT
+    call vwait; HALT
 
     LD      HL, MWORK.CAMERA_SCREEN
     LD      DE, NAMTBL
@@ -1557,11 +1567,11 @@ LOAD_HALF_QUEST
     LD    DE, MWORK.TMP_UNZIP
     CALL  MSUPPORT.RESET_BIG_RAM
 
-    CALL SETGAMEPAGE0
+    ;CALL SETGAMEPAGE0
     LD    HL, MDATAP0.ALPHABET_PATTERNS
     LD    DE, MWORK.TMP_UNZIP + 224*8    ;LOAD ALPHABET IN LAST LINE OF BANK
     CALL  PLETTER.UNPACK
-    CALL  RESTOREBIOS
+    ;CALL  RESTOREBIOS
     LD    HL, MWORK.TMP_UNZIP
     LD    DE, CHRTBL+32*8*8*2
     LD    BC, 32*8*8
@@ -1579,11 +1589,11 @@ LOAD_HALF_QUEST
     LD    DE, MWORK.TMP_UNZIP
     CALL  MSUPPORT.RESET_BIG_RAM
 
-    CALL SETGAMEPAGE0
+    ;CALL SETGAMEPAGE0
     LD    HL, MDATAP0.ALPHABET_COLORS
     LD    DE, MWORK.TMP_UNZIP + 224*8    ;LOAD ALPHABET IN LAST LINE OF BANK
     CALL  PLETTER.UNPACK
-    CALL    RESTOREBIOS
+    ;CALL    RESTOREBIOS
     LD    HL, MWORK.TMP_UNZIP
     LD    DE, CLRTBL+32*8*8*2
     LD    BC, 32*8*8
@@ -1597,10 +1607,10 @@ LOAD_HALF_QUEST
 ;==========================================
 LOAD_BANK
     PUSH  DE
-    CALL SETGAMEPAGE0
+    ;CALL SETGAMEPAGE0
     LD    DE, MWORK.TMP_UNZIP
     CALL  PLETTER.UNPACK
-    CALL RESTOREBIOS
+    ;CALL RESTOREBIOS
     LD    HL, MWORK.TMP_UNZIP
     POP   DE
     LD    BC, 32*8*8
@@ -1628,7 +1638,7 @@ SHOW_INTERMISSION
     POP     BC
     DJNZ    .LOOP
 
-    HALT
+    call vwait ;HALT
 
     LD      HL, MWORK.CAMERA_SCREEN
     LD      DE, NAMTBL
@@ -1652,61 +1662,61 @@ SHOW_INTERMISSION
 ;==========================================
 LOAD_INTERMISSION
 
-    CALL    SETGAMEPAGE0
+    ;CALL    SETGAMEPAGE0
     LD    HL, MDATAP0.INTERMISION_PATTERNS_0
     LD    DE, MWORK.TMP_UNZIP
     CALL  PLETTER.UNPACK
-    CALL    RESTOREBIOS
+    ;CALL    RESTOREBIOS
     LD    HL, MWORK.TMP_UNZIP
     LD    DE, CHRTBL
     LD    BC, 32*8*8
     CALL  LDIRVM
 
-    CALL    SETGAMEPAGE0
+    ;CALL    SETGAMEPAGE0
     LD    HL, MDATAP0.INTERMISION_PATTERNS_1
     LD    DE, MWORK.TMP_UNZIP
     CALL  PLETTER.UNPACK
-    CALL    RESTOREBIOS
+    ;CALL    RESTOREBIOS
     LD    HL, MWORK.TMP_UNZIP
     LD    DE, CHRTBL+32*8*8
     LD    BC, 32*8*8
     CALL  LDIRVM
 
-    CALL    SETGAMEPAGE0
+    ;CALL    SETGAMEPAGE0
     LD    HL, MDATAP0.INTERMISION_PATTERNS_2
     LD    DE, MWORK.TMP_UNZIP
     CALL  PLETTER.UNPACK
-    CALL    RESTOREBIOS
+    ;CALL    RESTOREBIOS
     LD    HL, MWORK.TMP_UNZIP
     LD    DE, CHRTBL+32*8*8*2
     LD    BC, 32*8*8
     CALL  LDIRVM
 
-    CALL    SETGAMEPAGE0
+    ;CALL    SETGAMEPAGE0
     LD    HL, MDATAP0.INTERMISION_COLORS_0
     LD    DE, MWORK.TMP_UNZIP
     CALL  PLETTER.UNPACK
-    CALL    RESTOREBIOS
+    ;CALL    RESTOREBIOS
     LD    HL, MWORK.TMP_UNZIP
     LD    DE, CLRTBL
     LD    BC, 32*8*8
     CALL  LDIRVM
 
-    CALL    SETGAMEPAGE0
+    ;CALL    SETGAMEPAGE0
     LD    HL, MDATAP0.INTERMISION_COLORS_1
     LD    DE, MWORK.TMP_UNZIP
     CALL  PLETTER.UNPACK
-    CALL    RESTOREBIOS
+    ;CALL    RESTOREBIOS
     LD    HL, MWORK.TMP_UNZIP
     LD    DE, CLRTBL+32*8*8
     LD    BC, 32*8*8
     CALL  LDIRVM
 
-    CALL    SETGAMEPAGE0
+    ;CALL    SETGAMEPAGE0
     LD    HL, MDATAP0.INTERMISION_COLORS_2
     LD    DE, MWORK.TMP_UNZIP
     CALL  PLETTER.UNPACK
-    CALL    RESTOREBIOS
+    ;CALL    RESTOREBIOS
     LD    HL, MWORK.TMP_UNZIP
     LD    DE, CLRTBL+32*8*8*2
     LD    BC, 32*8*8
@@ -1790,7 +1800,7 @@ SHOW_GOOD_ENDING
     POP     BC
     DJNZ    .LOOP
 
-    HALT
+    call vwait ;HALT
 
     LD      HL, MWORK.CAMERA_SCREEN
     LD      DE, NAMTBL
@@ -1806,7 +1816,7 @@ SHOW_GOOD_ENDING
     LD    A, 112
     LD    [MWORK.PLAYER_Y], A
     CALL   MPLAYER.SET_PLAYER_FRAME
-    HALT
+    call vwait ;HALT
     CALL  MSCREEN.RENDER_SPRITES
 
     LD      A, K_SONG_3
@@ -1871,11 +1881,11 @@ LOAD_GOOD_ENDING
     LD    DE, MWORK.TMP_UNZIP
     CALL  MSUPPORT.RESET_BIG_RAM
 
-    CALL    SETGAMEPAGE0
+    ;CALL    SETGAMEPAGE0
     LD    HL, MDATAP0.ALPHABET_PATTERNS
     LD    DE, MWORK.TMP_UNZIP + 224*8    ;LOAD ALPHABET IN LAST LINE OF BANK0
     CALL  PLETTER.UNPACK
-    CALL RESTOREBIOS
+    ;CALL RESTOREBIOS
     LD    HL, MWORK.TMP_UNZIP
     LD    DE, CHRTBL
     LD    BC, 32*8*8
@@ -1893,11 +1903,11 @@ LOAD_GOOD_ENDING
     LD    DE, MWORK.TMP_UNZIP
     CALL  MSUPPORT.RESET_BIG_RAM
 
-    CALL    SETGAMEPAGE0
+    ;CALL    SETGAMEPAGE0
     LD    HL, MDATAP0.ALPHABET_COLORS
     LD    DE, MWORK.TMP_UNZIP + 224*8
     CALL  PLETTER.UNPACK
-    CALL RESTOREBIOS
+    ;CALL RESTOREBIOS
 
     LD    HL, MWORK.TMP_UNZIP
     LD    DE, CLRTBL
@@ -1938,7 +1948,7 @@ SHOW_BAD_ENDING
     POP     BC
     DJNZ    .LOOP
 
-    HALT
+    call vwait ;HALT
 
     LD      HL, MWORK.CAMERA_SCREEN
     LD      DE, NAMTBL
@@ -1954,7 +1964,7 @@ SHOW_BAD_ENDING
     LD    A, 112
     LD    [MWORK.PLAYER_Y], A
     CALL   MPLAYER.SET_PLAYER_FRAME
-    HALT
+    call vwait ;HALT
     CALL  MSCREEN.RENDER_SPRITES
 
     LD      A, K_SONG_GAME_OVER
@@ -2012,11 +2022,11 @@ LOAD_BAD_ENDING
     LD    DE, MWORK.TMP_UNZIP
     CALL  MSUPPORT.RESET_BIG_RAM
 
-    CALL  SETGAMEPAGE0
+    ;CALL  SETGAMEPAGE0
     LD    HL, MDATAP0.ALPHABET_PATTERNS
     LD    DE, MWORK.TMP_UNZIP + 224*8    ;LOAD ALPHABET IN LAST LINE OF BANK0
     CALL  PLETTER.UNPACK
-    CALL  RESTOREBIOS
+    ;CALL  RESTOREBIOS
 
     LD    HL, MWORK.TMP_UNZIP
     LD    DE, CHRTBL
@@ -2035,11 +2045,11 @@ LOAD_BAD_ENDING
     LD    DE, MWORK.TMP_UNZIP
     CALL  MSUPPORT.RESET_BIG_RAM
 
-    CALL  SETGAMEPAGE0
+    ;CALL  SETGAMEPAGE0
     LD    HL, MDATAP0.ALPHABET_COLORS
     LD    DE, MWORK.TMP_UNZIP + 224*8
     CALL  PLETTER.UNPACK
-    CALL  RESTOREBIOS
+    ;CALL  RESTOREBIOS
     LD    HL, MWORK.TMP_UNZIP
     LD    DE, CLRTBL
     LD    BC, 32*8*8
@@ -2068,7 +2078,7 @@ SHOW_ENDING_STAFF
                         LD      DE, .INDEX
 
 .MAIN_LOOP              LD      B, 25
-.LOOP                   HALT
+.LOOP                   call vwait ;HALT
                         DJNZ    .LOOP
 
                         LD      A, [DE]
@@ -2115,11 +2125,11 @@ SHOW_ENDING_STAFF
 ;::LOAD_STAFF_TILES
 ;========================================
 LOAD_STAFF_TILES
-                        CALL    SETGAMEPAGE0
+                        ;CALL    SETGAMEPAGE0
                         LD      HL, MDATAP0.STAFF_PATTERNS
                         LD      DE, MWORK.TMP_UNZIP
                         CALL    PLETTER.UNPACK
-                        CALL    RESTOREBIOS
+                        ;CALL    RESTOREBIOS
                         LD      HL, MWORK.TMP_UNZIP
                         LD      DE, CHRTBL
                         LD      BC, 32*8*8
@@ -2135,11 +2145,11 @@ LOAD_STAFF_TILES
                         LD      BC, 32*8*8
                         CALL    LDIRVM
 
-                        CALL    SETGAMEPAGE0
+                        ;CALL    SETGAMEPAGE0
                         LD      HL, MDATAP0.STAFF_COLORS
                         LD      DE, MWORK.TMP_UNZIP
                         CALL    PLETTER.UNPACK
-                        CALL    RESTOREBIOS
+                        ;CALL    RESTOREBIOS
                         LD      HL, MWORK.TMP_UNZIP
                         LD      DE, CLRTBL
                         LD      BC, 32*8*8
@@ -2157,11 +2167,11 @@ LOAD_STAFF_TILES
 
 
 
-                        CALL    SETGAMEPAGE0
+                        ;CALL    SETGAMEPAGE0
                         LD      HL, MDATAP0.STAFF_TILES
                         LD      DE, MWORK.TMP_UNZIP
                         CALL    PLETTER.UNPACK
-                        CALL    RESTOREBIOS
+                        ;CALL    RESTOREBIOS
                         EI
                         RET
 
@@ -2181,7 +2191,7 @@ DO_SCROLL
                         LD      BC, 23*32
                         LDIR
 
-                        HALT
+                        call vwait ;HALT
                         LD      HL, MWORK.CAMERA_SCREEN
                         LD      DE, NAMTBL
                         LD      B, 14;48
@@ -2203,16 +2213,22 @@ TRATE_PAUSE
     LD    HL,INTERR
     SET   2,[HL]
 
+    ld      a, $23 ; pause LED on
+    out     [0], a
+
 .WaitLoop
-    HALT
+    call vwait ;HALT
     DJNZ    .WaitLoop
 .CheckF1
-    HALT
+    call vwait ;HALT
     LD      A, 6 ;F1
     CALL    SNSMAT
     AND     32
     CP      0
     JR      NZ, .CheckF1
+
+    ld      a, $3 ; pause LED off
+    out     [0], a
 
     LD    HL, FX_TAKE ;//TODO Mejorar
     LD    [PUNTERO_SONIDO], HL
@@ -2221,7 +2237,7 @@ TRATE_PAUSE
 
     LD      B, 30
 .WaitLoop2
-    HALT
+    call vwait ;HALT
     DJNZ    .WaitLoop2
 
 
@@ -2272,7 +2288,7 @@ SHOW_GAME_OVER
 
                                 LD      HL, MWORK.CAMERA_SCREEN+9*32+18
                                 CALL    RENDER_BONUS_POINTS
-                                HALT
+                                call vwait ;HALT
                                 LD      HL, MWORK.CAMERA_SCREEN
                                 LD      DE, NAMTBL
                                 LD      B, 48

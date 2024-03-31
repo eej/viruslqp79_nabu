@@ -10,7 +10,7 @@
 
 ; LOS DATOS QUE HAY QUE VARIAR :
 ; * BUFFER DE SONIDO DONDE SE DECODIFICA TOTALMENTE EL ARCHIVO MUS
-; * Nº DE CANCION. 
+; * Nï¿½ DE CANCION. 
 ; * TABLA DE CANCIONES
 
 
@@ -29,7 +29,7 @@ HOOK            EQU     $FD9A
 
 
 
-SONG            EQU     INTERR+1        ;DBNº DE CANCION
+SONG            EQU     INTERR+1        ;DBNï¿½ DE CANCION
 TEMPO           EQU     INTERR+2        ;DB TEMPO
 TTEMPO          EQU     INTERR+3        ;DB CONTADOR TEMPO
 
@@ -103,6 +103,16 @@ ENVOLVENTE_BACK	EQU	INTERR+$70	;DB:	BACKUP DE LA FORMA DE LA ENVOLENTE
 
 ;______________________________________________________
 
+vseen equ INTERR+$71
+
+vwait:  xor a
+        ld [vseen], a
+vwl:    halt
+        ld a, [vseen]
+        cp 0
+        jr z, vwl
+        ret
+
 
 INICIO:		CALL    ROUT
 		
@@ -113,7 +123,8 @@ INICIO:		CALL    ROUT
 		CALL    REPRODUCE_SONIDO
 		CALL    PLAY
 		
-
+                ld a, 1
+                ld [vseen], a
 		
           	;CALL	REPRODUCE_EFECTO
                 
@@ -181,7 +192,7 @@ NO_ENVOLVENTES_SONIDO:
                 JR      SI_RUIDO
 NO_RUIDO: 	XOR	A
 		LD      [PSG_REG_SEC+6],A
-		LD      A,10111000B
+		LD      A,01111000B
 SI_RUIDO:       LD      [PSG_REG_SEC+7],A
        
                 INC     HL
@@ -195,7 +206,7 @@ FIN_SONIDO:     LD      HL,INTERR
        		;xor	a ; ***
        		LD	[PSG_REG_SEC+13],A			;08.13 RESTAURA LA ENVOLVENTE TRAS EL SFX
        		
-FIN_NOPLAYER:	LD      A,10111000B
+FIN_NOPLAYER:	LD      A,01111000B
        		LD      [PSG_REG_SEC+7],A
 
                 RET                        
@@ -217,7 +228,7 @@ NO_BACKUP_ENVOLVENTE:
 		XOR     A
 		
 
-
+/*
 		LD      C,$A0
                 LD      HL,PSG_REG_SEC
 LOUT:		OUT     [C],A
@@ -237,9 +248,39 @@ LOUT:		OUT     [C],A
 		LD      [PSG_REG_SEC+13],A
                 LD	[PSG_REG+13],A
                 RET
+*/
+                LD      HL, PSG_REG_SEC+7
+                res     7, [hl]
+                set     6, [hl]
 
+		LD      C,$41
+                LD      HL,PSG_REG_SEC
+LOUT:		OUT     [C],A
+                DEC     C
+                OUTI 
+                INC     C
+                INC     A
+                ;cp      7
+                ;jr      z, r7fix
+                CP      13
+                JR      NZ,LOUT
+                OUT     [C],A
+                LD      A,[HL]
+                AND     A
+                RET     Z
+                DEC     C
+                OUT     [C],A
+		XOR     A
+		LD      [PSG_REG_SEC+13],A
+                LD	[PSG_REG+13],A
+                RET
 
-;INICIA EL SONIDO Nº [A]
+;r7fix:
+;                res 7, [hl]
+;                set 6, [hl]
+;                jr LOUT
+
+;INICIA EL SONIDO Nï¿½ [A]
 
 INICIA_SONIDO:  ;CP	8		;SFX SPEECH
 		;JP	Z,SLOOP		;
@@ -263,7 +304,7 @@ CLEAR_PSG_BUFFER:
 		LD	[HL],A
 		LDIR
 		
-		LD      A,10111000B		; **** POR SI ACASO ****
+		LD      A,01111000B		; **** POR SI ACASO ****
 		LD      [PSG_REG+7],A
 		
 		LD	HL,PSG_REG
@@ -276,13 +317,13 @@ CLEAR_PSG_BUFFER:
 
 
 ;CARGA UNA CANCION
-;IN:[A]=Nº DE CANCION
+;IN:[A]=Nï¿½ DE CANCION
 
 CARGA_CANCION:  LD      HL,INTERR       ;CARGA CANCION
 		
                 SET     1,[HL]          ;REPRODUCE CANCION
                 LD      HL,SONG
-                LD      [HL],A          ;Nº A
+                LD      [HL],A          ;Nï¿½ A
 
                 
 
@@ -351,7 +392,7 @@ NPTJP0:         AND	00000110B
                 INC	HL
 
 ;BUSCA Y GUARDA INICIO DE LOS CANALES EN EL MODULO MUS (OPTIMIZAR****************)
-;AÑADE OFFSET DEL LOOP
+;Aï¿½ADE OFFSET DEL LOOP
 
 		PUSH	HL			;IX INICIO OFFSETS LOOP POR CANAL
 		POP	IX
@@ -475,7 +516,7 @@ NO_PUNTILLO:    CP      00111111B       ;ES COMANDO?
                 LD      [DE],A
                 INC     HL
                 INC     DE
-                LD      A,[HL]          ;Nº DE INSTRUMENTO
+                LD      A,[HL]          ;Nï¿½ DE INSTRUMENTO
                 LD      [DE],A
                 INC     DE
                 INC	HL
@@ -613,7 +654,7 @@ COMANDOS:       LD      A,[HL]
                 JR      Z,COM_EFECTO
 
                 INC     HL
-                LD      A,[HL]          		;Nº DE PAUTA
+                LD      A,[HL]          		;Nï¿½ DE PAUTA
                 INC     HL
                 LD	E,[HL]				
                 
@@ -809,7 +850,7 @@ PCAJP4:         LD      L,[IX+0]
 		
 		BIT     7,A		;LOOP / EL RESTO DE BITS NO AFECTAN
                 JR      Z,PCAJP0
-                AND     00011111B       ;MÁXIMO LOOP PAUTA [0,32]X2!!!-> PARA ORNAMENTOS
+                AND     00011111B       ;Mï¿½XIMO LOOP PAUTA [0,32]X2!!!-> PARA ORNAMENTOS
                 RLCA			;X2
                 LD      D,0
                 LD      E,A

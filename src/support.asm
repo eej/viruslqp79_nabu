@@ -113,58 +113,101 @@ SETVRAMADD
 ; --- Entrada: HL = origen en RAM                             ---
 ; ---          DE = destino en VRAM                           ---
 ; ---          B = (N. de bloques de 16bytes * 17) MOD 256    ---
-;=======================================*/
+;=======================================
 UFLDIRVM
     CALL  SETVRAMADD                      ; Llamamos a SETVRAMADD
 .Loop
     OUTI                                    ; out c,[hl] ; inc hl ; dec b (1)
     NOP
     NOP
+    NOP
     OUTI                                    ; out c,[hl] ; inc hl ; dec b (2)
+    NOP
     NOP
     NOP
     OUTI                                    ; out c,[hl] ; inc hl ; dec b (3)
     NOP
     NOP
+    NOP
     OUTI                                    ; out c,[hl] ; inc hl ; dec b (4)
+    NOP
     NOP
     NOP
     OUTI                                    ; out c,[hl] ; inc hl ; dec b (5)
     NOP
     NOP
+    NOP
     OUTI                                    ; out c,[hl] ; inc hl ; dec b (6)
+    NOP
     NOP
     NOP
     OUTI                                    ; out c,[hl] ; inc hl ; dec b (7)
     NOP
     NOP
+    NOP
     OUTI                                    ; out c,[hl] ; inc hl ; dec b (8)
+    NOP
     NOP
     NOP
     OUTI                                    ; out c,[hl] ; inc hl ; dec b (9)
     NOP
     NOP
+    NOP
     OUTI                                    ; out c,[hl] ; inc hl ; dec b (10)
+    NOP
     NOP
     NOP
     OUTI                                    ; out c,[hl] ; inc hl ; dec b (11)
     NOP
     NOP
+    NOP
     OUTI                                    ; out c,[hl] ; inc hl ; dec b (12)
+    NOP
     NOP
     NOP
     OUTI                                    ; out c,[hl] ; inc hl ; dec b (13)
     NOP
     NOP
+    NOP
     OUTI                                    ; out c,[hl] ; inc hl ; dec b (14)
+    NOP
     NOP
     NOP
     OUTI                                    ; out c,[hl] ; inc hl ; dec b (15)
     NOP
     NOP
+    NOP
     OUTI                                    ; out c,[hl] ; inc hl ; dec b (16)
-    NOP
-    NOP
+    ;NOP
+    ;NOP
+    ;NOP
+    DJNZ  .Loop                           ; Cerramos el bucle
+    RET                                     ; Volvemos
+
+
+UFLDIRVM_FAST
+    SET   6,d                             ; Activamos el sexto bit del byte alto (normalmente escritura)
+    LD    c,$a1
+    OUT   [c],e                           ; Escribimos en el VDP el byte bajo de la direccion de destino
+    OUT   [c],d                           ; Escribimos en el VDP el byte alto de la direccion de destino
+    DEC   c                               ; c = puerto #0 de escritura del VDP
+.Loop
+    OUTI                                    ; out c,[hl] ; inc hl ; dec b (1)
+    OUTI                                    ; out c,[hl] ; inc hl ; dec b (2)
+    OUTI                                    ; out c,[hl] ; inc hl ; dec b (3)
+    OUTI                                    ; out c,[hl] ; inc hl ; dec b (4)
+    OUTI                                    ; out c,[hl] ; inc hl ; dec b (5)
+    OUTI                                    ; out c,[hl] ; inc hl ; dec b (6)
+    OUTI                                    ; out c,[hl] ; inc hl ; dec b (7)
+    OUTI                                    ; out c,[hl] ; inc hl ; dec b (8)
+    OUTI                                    ; out c,[hl] ; inc hl ; dec b (9)
+    OUTI                                    ; out c,[hl] ; inc hl ; dec b (10)
+    OUTI                                    ; out c,[hl] ; inc hl ; dec b (11)
+    OUTI                                    ; out c,[hl] ; inc hl ; dec b (12)
+    OUTI                                    ; out c,[hl] ; inc hl ; dec b (13)
+    OUTI                                    ; out c,[hl] ; inc hl ; dec b (14)
+    OUTI                                    ; out c,[hl] ; inc hl ; dec b (15)
+    OUTI                                    ; out c,[hl] ; inc hl ; dec b (16)
     DJNZ  .Loop                           ; Cerramos el bucle
     RET                                     ; Volvemos
 
@@ -175,10 +218,10 @@ INIT_SPRITES_SIZE
                 LD              A, [RG0SAV+1]                   ; SPRITES 16x16
                 OR              00000010B
                 LD              B,1
-                OUT             [099H],A 
+                OUT             [$a1],A 
                 LD              A,B
                 OR              10000000B
-                OUT             [099H],A
+                OUT             [$a1],A
                 RET
 
 ;==================================
@@ -187,7 +230,7 @@ INIT_SPRITES_SIZE
 WAIT_FEW_SECONDS
     LD    b, 80
 .Loop
-    HALT
+    call vwait ;HALT
     DJNZ  .Loop
     RET    
 
@@ -197,7 +240,7 @@ WAIT_FEW_SECONDS
 WAIT_SECONDS
     LD    b, 100
 .Loop
-    HALT
+    call vwait ;HALT
     DJNZ  .Loop
     RET    
 

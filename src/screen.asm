@@ -143,7 +143,7 @@ RENDER
     CP    0
     JP    z, .RenderAll
 
-    HALT
+    call vwait ;HALT
     
     ;Render Sprites
     LD    hl, MWORK.SPRITES_TABLE
@@ -157,7 +157,7 @@ RENDER
     RET
 
 .RenderAll
-    HALT
+    call vwait ;HALT
     ;Render Sprites
     LD    hl, MWORK.SPRITES_TABLE
     LD    de, SPRATR

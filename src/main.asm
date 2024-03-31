@@ -1,43 +1,54 @@
                 OUTPUT          lqp79.rom
-                DEFPAGE         0, $0000, $4000         ; PAGE WITH DATA    
-                DEFPAGE         1, $4000, $8000          ; PAGE WITH LOGIC
-        ;        DEFPAGE         2, $8000, $4000          ; PAGE WITH LOGIC
+                ;DEFPAGE         0, $0000, $4000         ; PAGE WITH DATA    
+;                DEFPAGE         1, $4000, $8000          ; PAGE WITH LOGIC
+;        ;        DEFPAGE         2, $8000, $4000          ; PAGE WITH LOGIC
+;
+;                MAP             $C000                   ; RAM
+;
+;                PAGE            0
+;                CODE            @ $0000
+;                DW              $0000                   
 
-                MAP             $C000                   ; RAM
+                include         "nc-bios.exp"
+                ORG             prog_entry
 
-                PAGE            0
-                CODE            @ $0000
-                DW              $0000                   
+                jp              INIT
 
                 INCLUDE         "data_p0.asm"   
 
-                PAGE            1
-                CODE            @ $4000
-                DB              $41, $42                ; ROM
-                DW              INIT                    ; START ADDRESS
-                DW              0, 0, 0, 0, 0, 0
+;                PAGE            1
+;                CODE            @ $4000
+;                DB              $41, $42                ; ROM
+;                DW              INIT                    ; START ADDRESS
+;                DW              0, 0, 0, 0, 0, 0
 
                 INCLUDE         "main_macros.asm"
                 INCLUDE         "bios.asm"
-                INCLUDE         "setpages.asm"
+                ;INCLUDE         "setpages.asm"
                 INCLUDE         "game.asm"
                 INCLUDE         "screen.asm"
                 INCLUDE         "support.asm"
                 INCLUDE         "unpack.asm"
 
-ACTIVE_BIOS     CALL            RESTOREBIOS
-                EI
-                RET 
+;ACTIVE_BIOS     CALL            RESTOREBIOS
+;                EI
+;                RET 
 
-QUIT_BIOS       DI
-                CALL            SETGAMEPAGE0
-                RET
+;QUIT_BIOS       DI
+;                CALL            SETGAMEPAGE0
+;                RET
 
 INIT            DI
-                IM              1
-                LD              SP, [HIMEM]        
-                CALL            SETPAGES48K
-                CALL            RESTOREBIOS
+                ;IM              1
+                ;LD              SP, [HIMEM]        
+                ;CALL            SETPAGES48K
+                ;CALL            RESTOREBIOS
+
+                /*ld              bc, MWORK.work_end - MWORK.work_start
+                ld              hl, MWORK.work_start
+                ld              de, MWORK.work_start + 1
+                ld              [hl], 0
+                ldir*/
 
                 LD              A, 2                    ; SCREEN 2
                 CALL            CHGMOD
