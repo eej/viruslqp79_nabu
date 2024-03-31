@@ -2,7 +2,7 @@
 
 ![](docs/graphics/tiles/intro_menu/intro.png?raw=true)
 
-Nabu port of the Arduboy game [VirusLQP-79](https://github.com/TEAMarg/ID-40-VIRUS-LQP-79), by Team Arg. Converted from [Pentacour's MSX port](https://github.com/Pentacour/viruslqp79_msx). 
+Nabu port of the Arduboy game [Virus LQP-79](https://community.arduboy.com/t/virus-lqp-79-eighth-team-a-r-g-game/1646), by Team Arg. Converted from [Pentacour's MSX port](https://github.com/Pentacour/viruslqp79_msx). 
 
 *The MSX port placed 2nd in the [MSXDev18 contest](https://www.msxdev.org/2018/05/10/msxdev18-3rd-entry-virus-lqp-79/)*
 
